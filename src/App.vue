@@ -19,10 +19,7 @@
 
 <script>
 export default {
-  name: 'App',
-  updated: function() {
-    console.log(window.location);
-  }
+  name: 'App'
 }
 </script>
 

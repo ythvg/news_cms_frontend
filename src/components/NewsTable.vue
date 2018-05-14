@@ -1,5 +1,8 @@
 <template>
-    <Table border :columns="columns" :data="data" class="newsTable"></Table>
+    <div>
+        <Table border :columns="columns" :data="data" class="newsTable"></Table>
+    </div>
+    
 </template>
 <script>
     export default {
@@ -7,29 +10,15 @@
             return {
                 columns: [
                     {
-                        title: 'Name',
-                        key: 'name',
-                        render: (h, params) => {
-                            return h('div', [
-                                h('Icon', {
-                                    props: {
-                                        type: 'person'
-                                    }
-                                }),
-                                h('strong', params.row.name)
-                            ]);
-                        }
+                        title: '新闻标题',
+                        key: 'title'
                     },
                     {
-                        title: 'Age',
-                        key: 'age'
+                        title: '创建时间',
+                        key: 'ctime'
                     },
                     {
-                        title: 'Address',
-                        key: 'address'
-                    },
-                    {
-                        title: 'Action',
+                        title: '操作',
                         key: 'action',
                         width: 150,
                         align: 'center',
@@ -45,10 +34,10 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.show(params.index)
+                                            this.show(params.row._id)
                                         }
                                     }
-                                }, 'View'),
+                                }, '编辑'),
                                 h('Button', {
                                     props: {
                                         type: 'error',
@@ -56,48 +45,48 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.remove(params.index)
+                                            this.remove(params.row._id)
                                         }
                                     }
-                                }, 'Delete')
+                                }, '删除')
                             ]);
                         }
                     }
                 ],
-                data: [
-                    {
-                        name: 'John Brown',
-                        age: 18,
-                        address: 'New York No. 1 Lake Park'
-                    },
-                    {
-                        name: 'Jim Green',
-                        age: 24,
-                        address: 'London No. 1 Lake Park'
-                    },
-                    {
-                        name: 'Joe Black',
-                        age: 30,
-                        address: 'Sydney No. 1 Lake Park'
-                    },
-                    {
-                        name: 'Jon Snow',
-                        age: 26,
-                        address: 'Ottawa No. 2 Lake Park'
-                    }
-                ]
+                data: []
             }
         },
         methods: {
-            show (index) {
-                this.$Modal.info({
-                    title: 'User Info',
-                    content: `Name：${this.data[index].name}<br>Age：${this.data[index].age}<br>Address：${this.data[index].address}`
-                })
+            show (id) {
+                this.$router.push({ path: `/edit/${id}`})
             },
-            remove (index) {
-                this.data.splice(index, 1);
+            remove (id) {
+                this.$Modal.confirm({
+                    title: '删除新闻',
+                    content: '<p>你确定要删除这条新闻吗？</p>',
+                    onOk: () => {
+                    this.$axios.delete(`/api/news/${id}`)
+                        .then( (res) => {
+                            this.getData();
+                            })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                    }
+                });
+            },
+            getData () {
+                this.$axios.get('/api/news')
+                    .then( (res) => {
+                        this.data = res.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
             }
+        },
+        created: function() {
+            this.getData();
         }
     }
 </script>

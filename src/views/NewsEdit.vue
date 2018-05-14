@@ -2,26 +2,26 @@
     <div>
         <Breadcrumb :style="{margin: '20px 0'}">
             <BreadcrumbItem>首页</BreadcrumbItem>
-            <BreadcrumbItem>新闻列表</BreadcrumbItem>
+            <BreadcrumbItem>新闻编辑</BreadcrumbItem>
         </Breadcrumb>
-
         <Card>
             <div class="btn-container">
-                <router-link to="/add">
-                     <Button type="primary" icon="android-add">添加新闻</Button>
+                <router-link to="/">
+                     <Button type="primary" icon="arrow-return-left">返回</Button>
                 </router-link>
             </div>
-            <news-table></news-table>
+            <news-editor></news-editor>
         </Card>
     </div>
 </template>
 <script>
-   import NewsTable from '../components/NewsTable'
+   import NewsEditor from '../components/NewsEditor'
 
     export default {
         components: {
-            NewsTable
+            NewsEditor
         }
+        
     }
 </script>
 
